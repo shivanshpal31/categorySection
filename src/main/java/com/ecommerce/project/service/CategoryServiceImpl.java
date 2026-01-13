@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService{
 
         categoryRepository.delete(savedCategory);
 
-        return "Deletion Successfull";
+        return "Deletion Successfully";
 //        List<Category> categories=categoryRepository.findAll();
 //        Category category=categories.stream()
 //                .filter(c->c.getCategoryId().equals(categoryId))
