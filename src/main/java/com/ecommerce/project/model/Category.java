@@ -23,7 +23,7 @@ public class Category
     private Long categoryId;
 
     @NotBlank
-    @Size(min = 5, max = 7)
+    @Size(min = 5)
     private String categoryName;
 
 //    public Category(){}

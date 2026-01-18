@@ -1,5 +1,7 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exceptions.APIException;
+import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public List<Category> getAllCategories() {
 //        return categoryRepository;
+        if (categoryRepository.count()<1)
+            throw new APIException("No Records Found");
         return categoryRepository.findAll();
     }
 
@@ -31,6 +35,9 @@ public class CategoryServiceImpl implements CategoryService{
     public void createCategory(Category category) {
 //        category.setCategoryId(nextId++);
 //        categoryRepository.add(category);
+        Category savedCategory=categoryRepository.findByCategoryName(category.getCategoryName());
+        if(savedCategory!=null)
+            throw new APIException("Category with the name "+category.getCategoryName()+" already exist!");
         categoryRepository.save(category);
     }
 
@@ -38,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService{
     public String deleteCategory(long categoryId){
 
         Category savedCategory=categoryRepository.findById(categoryId)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Resource not found"));
+                .orElseThrow(()->new ResourceNotFoundException("Category","CategoryId",categoryId));
 
         categoryRepository.delete(savedCategory);
 
@@ -63,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService{
         Optional<Category> savedCategoryOptional=categoryRepository.findById(categoryId);
 
         Category savedCategory=savedCategoryOptional
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Resoruce not found"));
+                .orElseThrow(()->new ResourceNotFoundException("Category","CategoryId",categoryId));
 
         category.setCategoryId(categoryId);
 
